@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block css %}
+  <style>
+    .card {
+      margin-bottom: 2rem;
+    }
+  </style>
+{% endblock css %}
+
+{% block section %}
+  <div class="my-3 d-flex align-items-center justify-content-between">
+    <h2 class="fw-bold" style="color: #f9c22e"># 인기 영화</h2>
+    <a href="#" class="text-muted text-decoration-none fs-5">더보기</a>
+  </div>
+  <div class="row">
+    {% for article in articles_list %}
+      <div class="col-3">
+        <div class="card" style="width: 18rem;">
+          {% if article.image %}
+            <img src="{{ article.image.url }}" class="card-img-top" alt="...">
+          {% else %}
+            <img src="https://dummyimage.com/1200x960/000000/c4c4c4" class="card-img-top" alt="...">
+          {% endif %}
+          <div class="card-body">
+            <a href="{% url 'articles:detail' article.pk %}">
+              <h3 class=" card-text">{{ article.title }}</h3>
+            </a>
+            <p class="card-text">{{ article.content }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
