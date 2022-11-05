@@ -1,13 +1,17 @@
 from django.http import JsonResponse
+import requests
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_safe
-from .models import Article, Comment
+from .models import Article, Comment, Movie
 from .forms import ArticleForm, CommentForm
 from django.core.paginator import Paginator
 
 # Create your views here.
+
+my_api_key = '801b2f9c7a6d8dce6f3bd7f807c9ffc5'
+base_url = 'https://api.themoviedb.org/3/'
 
 @require_safe
 def index(request):

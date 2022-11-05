@@ -3,26 +3,15 @@
 {% load static %}
 {% block css %}
   <style>
-    .bg-img {
-      background-image: url({% static 'articles/cf3c5eef-de48-41e4-bdc8-abad850e4bf1.jpg' %});
-      width: 100%;
-      height: 530px;
-      background-size: cover;
-    }
-
     .card {
       margin-bottom: 2rem;
     }
   </style>
-{% endblock %}
-
-{% block body %}
-  <div class="bg-img p-0"></div>
-{% endblock %}
+{% endblock css %}
 
 {% block section %}
   <div class="my-3 d-flex align-items-center justify-content-between">
-    <h2 class="fw-bold" style="color: #f96e46"># 맛집 리스트</h2>
+    <h2 class="fw-bold" style="color: #f9c22e"># 인기 영화</h2>
     <a href="#" class="text-muted text-decoration-none fs-5">더보기</a>
   </div>
   <div class="row">
