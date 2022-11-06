@@ -15,11 +15,32 @@ base_url = 'https://api.themoviedb.org/3/'
 
 @require_safe
 def index(request):
+    # Article logic
     page = request.GET.get('page', '1')
     articles = Article.objects.order_by('-pk')
-    paginator = Paginator(articles, 6)
+    paginator = Paginator(articles, 10)
     page_obj = paginator.get_page(page)
+
+    response = requests.get('https://api.themoviedb.org/3/movie/popular?api_key=801b2f9c7a6d8dce6f3bd7f807c9ffc5&language=ko-KR')
+    response_dict = response.json().get('results')
+
+    for resData in response_dict:
+        tmd_id = resData.get('id')
+        
+        Movie.objects.get_or_create(
+            title = resData.get('title'),
+            backdrop_path = resData.get('backdrop_path'),
+            poster_path = resData.get('poster_path'),
+            overview = resData.get('overview'),
+            release_date = resData.get('release_date'),
+            genre = resData.get('genres'),
+            tmd_id = tmd_id,
+            )
+
+    movies = Movie.objects.all().order_by('-id')[:4]
+
     context = {
+        'movies' : movies, 
         'articles': articles, 
         'articles_list' : page_obj,
     }
@@ -44,11 +65,15 @@ def create(request):
 
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
+    page = request.GET.get('page', '1')
+    comments = article.comment_set.all()
+    paginator = Paginator(comments, 5)
+    page_obj = paginator.get_page(page)
     comment_form = CommentForm()
     context = {
         'article': article,
-        'comments': article.comment_set.all(),
         'comment_form': comment_form,
+        'comments' : page_obj
     }
     return render(request, 'articles/detail.html', context)
 

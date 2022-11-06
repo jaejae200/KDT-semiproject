@@ -3,57 +3,100 @@
 
 {% block section %}
   <div class="d-flex justify-content-center mt-5">
-    <div style="width: 30rem; height: 30rem;">
-      <h2>{{ article.title }}</h2>
-      <hr>
-      <p>{{ article.content }}</p>
-      <p>평점 |
-        {{ article.grade }}</p>
-      {% if request.user == article.user %}
-        <a href="{% url 'articles:update' article.pk %}">수정하기</a>
-        <a href="{% url 'articles:delete' article.pk %}">삭제하기</a>
-      {% endif %}
-      {% if request.user.is_authenticated %}
-        {% if request.user in article.like_users.all %}
-          <div class="text-center">
-            <button class="btn btn-primary">
-              <i id="like-btn" data-article-id="{{ article.pk }}" class="bi bi-heart-fill"></i>
-              <span id="like-count">{{ article.like_users.count }}</span>
-            </button>
+    <div style="width: 30rem; height: 60rem;" class="bg-light rounded-3">
+      <div class="p-3">
+        <div>
+          <div>
+            <h2>{{ article.title }}</h2>
+            <p class="m-0">평점 :
+              {{ article.grade }}/5</p>
+            <p class="font-monospace m-0">작성 시간 :
+              {{ article.created_at|date:'Y-m-d h:i A'}}
+              | 작성자 :
+              <a href="{% url 'accounts:detail' article.user.pk %}">{{ article.user }}</a>
+            </p>
           </div>
-        {% else %}
-          <div class="text-center">
-            <button class="btn btn-primary">
-              <i id="like-btn" data-article-id="{{ article.pk }}" class="bi bi-heart"></i>
-              <span id="like-count">{{ article.like_users.count }}</span>
-            </button>
+          <div class="text-end mt-3">
+            {% if request.user == article.user %}
+              <a href="{% url 'articles:update' article.pk %}" class="btn btn-outline-secondary">수정하기</a>
+              <a href="{% url 'articles:delete' article.pk %}" class="btn btn-outline-danger">삭제하기</a>
+            {% endif %}
+          </div>
+          <hr>
+        </div>
+        <div style="height: 10rem;">
+          <p>{{ article.content }}</p>
+        </div>
+        {% if request.user.is_authenticated %}
+          {% if request.user in article.like_users.all %}
+            <div class="text-center">
+              <button class="btn btn-primary">
+                <i id="like-btn" data-article-id="{{ article.pk }}" class="bi bi-heart-fill"></i>
+                <span id="like-count">{{ article.like_users.count }}</span>
+              </button>
+            </div>
+          {% else %}
+            <div class="text-center">
+              <button class="btn btn-primary">
+                <i id="like-btn" data-article-id="{{ article.pk }}" class="bi bi-heart"></i>
+                <span id="like-count">{{ article.like_users.count }}</span>
+              </button>
+            </div>
+          {% endif %}
+        {% endif %}
+        <h5 class="mt-4">댓글</h5>
+        <hr>
+        <div id="comments">
+          {% for comment in comments %}
+            <p>{{ comment.user.username }}
+              |
+              {{ comment.content }}
+            </p>
+            <hr>
+          {% endfor %}
+        </div>
+        <ul class="pagination justify-content-center mt-3">
+          {% if comments.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ comments.previous_page_number }}">이전</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+            </li>
+          {% endif %}
+          {% for page_number in comments.paginator.page_range %}
+            {% if page_number == comments.number %}
+              <li class="page-item active" aria-current="page">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          {% if comments.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ comments.next_page_number }}">다음</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+            </li>
+          {% endif %}
+        </ul>
+        {% if request.user.is_authenticated %}
+          <div class="py-3 ">
+            <form id="comment-form" data-article-id="{{ article.pk }}">
+              {% csrf_token %}
+              {% bootstrap_form comment_form layout='floating'%}
+              <button type="submit" class="btn btn-primary float-end">댓글 작성</button>
+            </form>
           </div>
         {% endif %}
-      {% endif %}
-      <h5 class="my-3">댓글</h5>
-      <hr>
-      <div id="comments">
-        {% for comment in comments %}
-          <p>{{ comment.user.username }}
-            |
-            {{ comment.content }}
-          </p>
-          {% comment %} {% if request.user == comment.user %}
-            <a href="{% url 'articles:comment_delete' article.pk comment.pk %}">삭제하기</a>
-          {% endif %} {% endcomment %}
-          <hr>
-        {% endfor %}
       </div>
-      {% if request.user.is_authenticated %}
-        <div class="py-3">
-          <form id="comment-form" data-article-id="{{ article.pk }}">
-            {% csrf_token %}
-            {% bootstrap_form comment_form layout='floating'%}
-            <button type="submit" class="btn btn-primary">댓글 작성</button>
-          </form>
-        </div>
-      {% endif %}
-    </div>  
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

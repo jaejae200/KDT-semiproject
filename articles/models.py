@@ -7,15 +7,12 @@ from django.conf import settings
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    poster_path = models.CharField(max_length=150)
+    poster_path = models.CharField(max_length=150, null = True)
     tmd_id = models.CharField(max_length=50)
-    genre = models.CharField(max_length=50)
+    genre = models.CharField(max_length=50, null = True)
     overview = models.TextField()
-    production_company = models.CharField(max_length=50)
-    homepage = models.CharField(max_length=150)
     release_date = models.CharField(max_length=50)
-    backdrop_path = models.CharField(max_length=150)
-    director = models.CharField(max_length=100)
+    backdrop_path = models.CharField(max_length=150, null = True)
     
     
     def __str__(self):
