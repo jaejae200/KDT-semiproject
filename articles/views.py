@@ -37,7 +37,7 @@ def index(request):
             tmd_id = tmd_id,
             )
 
-    movies = Movie.objects.all().order_by('-id')[:4]
+    movies = Movie.objects.all().order_by('id')[:4]
 
     context = {
         'movies' : movies, 
