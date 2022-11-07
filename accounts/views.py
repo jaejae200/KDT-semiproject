@@ -45,6 +45,7 @@ def logout(request):
     messages.warning(request, '로그아웃 하였습니다.')
     return redirect('articles:index')
 
+@login_required
 def detail(request, pk):
     user = get_object_or_404(get_user_model(), pk=pk)
 
