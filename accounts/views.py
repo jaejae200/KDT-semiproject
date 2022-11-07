@@ -6,6 +6,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm, CustomUserChangeForm
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -46,8 +47,9 @@ def logout(request):
 
 def detail(request, pk):
     user = get_object_or_404(get_user_model(), pk=pk)
+
     context = {
-        'user': user
+        'user': user,
     }
     return render(request, 'accounts/detail.html', context)
     
