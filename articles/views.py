@@ -63,6 +63,13 @@ def create(request):
     }
     return render(request, 'articles/form.html', context=context)
 
+def movie_detail(request, pk):
+    movie = get_object_or_404(Movie, pk=pk)
+    context = {
+        'movie' : movie,
+    }
+    return render(request, 'articles/movie.html', context)
+
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
     page = request.GET.get('page', '1')

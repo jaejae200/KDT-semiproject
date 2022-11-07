@@ -16,8 +16,10 @@
       <div class="d-flex justify-content-around">
         {% for movie in movies %}
           <div class="text-center">
-            <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="card-img-top rounded-4" style="width: 230px; height: 320px;">
-            <h5 class="card-title py-5 fw-bold">{{ movie.title }}</h5>
+            <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="card-img-top rounded-4" style="max_width: 230px; height: 320px;">
+            <a href="{% url 'articles:movie_detail' movie.pk %}">
+              <h5 class="py-3 fw-bold">{{ movie.title }}</h5>
+            </a>
           </div>
         {% endfor %}
       </div>

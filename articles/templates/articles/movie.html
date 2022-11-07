@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block section %}
+  <div class="d-flex flex-column mt-5 bg-light rounded-3" style="height: 40rem;">
+    <div class="p-4 d-flex justify-content-between">
+      <div>
+        <h1>{{ movie.title }}</h1>
+        <p>({{ movie.release_date }})</p>
+        <hr>
+        <p>{{ movie.overview }}</p>
+      </div>
+      <img src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" class="rounded-5 p-4" style="width: 300px; height: 420px;">
+    </div>
+    <hr class="border border-danger border-2 opacity-50">
+  </div>
+{% endblock %}
